@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo Application</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+</head>
+<body>
+    <div class="container-fluid col-7 mt-lg-5 shadow p-3">
+        <h3 class="text-center">Todo Application</h3>
+        <div class="form-outline my-2">
+            <input type="text" class="form-control" id="todo">
+            <label for="todo" class="form-label">Enter your todo</label>
+        </div>
+        <div class="form-group my-2">
+            <button class="w-100 btn btn-primary" onclick="submitTodo()">Submit</button>
+        </div>
+    </div>
+    <div class="container-fluid col-5 my-3 shadow border border-success">
+        <div id="displayValues"></div>
+    </div>
+
+    <script>
+        let newRef = ref(database, "allTodos")
+            onValue(newRef,(snapshot)=>{
+                displayValue.innerHTML = ""
+                const data = snapshot.val()
+                console.log(data);
+                if (data){
+                    todoIndex = data.length
+                    data.map((info,index)=>{
+                    displayValue.innerHTML += `
+                        <div>${index+1}</div>
+                        <small>${info.date}</small>&nbsp
+                        <small>${info.time}</small>
+                        <p>${info.username}</P>
+                        <p>${info.todoName}</P>
+
+                    `
+                })
+                }else{
+                    todoIndex = 0}
+            })
+        const submitTodo = () => {
+                let dbref = ref(database, `allTodos/${todoIndex}`)
+                let dates = new Date()
+                let todos = {
+                    todoName : todo.value,
+                    time : dates.toLocaleTimeString(),
+                    date : dates.toLocaleDateString(),
+                    username: auth.currentUser.displayName
+                }
+                set(dbref,todos)
+                console.log(todos);
+            } 
+            window.submitTodo = submitTodo
+    </script>
+</body>
+</html>
